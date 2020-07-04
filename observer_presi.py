@@ -36,7 +36,7 @@ class MinionAdapter(Observable):
             super().__setattr__(key, value)
         else:
             setattr(self.minion, key, value)
-            self.notify_observer(key=key, value=value)
+            self.notify_observers(key=key, value=value)
 
 class MinionFacade:
     minion_adapters = None
@@ -47,12 +47,17 @@ class MinionFacade:
         cls.minion_adapters = [
             MinionAdapter(Elf(), call_me='nall_nin'),
             MinionAdapter(Dwarf(), call_me='estver_narho'),
-            MinionAdapter(Human(), call_me='ring_mig')
+            MinionAdapter(Human(), call_me='ring_mig'),
         ]
 
     @classmethod
     def summon_minions(cls):
         print('Summoning minions ...')
+        for adapter in cls.minion_adapters:
+            adapter.call_me()
+
+    @classmethod
+    def summon_minions(cls):
         for adapter in cls.minion_adapters:
             adapter.call_me()
 
@@ -75,19 +80,20 @@ class EvilOverlord(Observer):
 def main():
     """
     >>> overlord = EvilOverlord()
-
+    
     >>> MinionFacade.create_minions()
     Creating minions ...
 
     >>> MinionFacade.monitor_elves(overlord)
     Added an observer to the Elves!
 
-    >>> MinionFacade.change_elves_name('Elrond')
+    >>> MinionFacade.change_elves_name('Elrond') #doctest: +ELLIPSIS
     Changing the Elves name ...
     The Evil Overlord received a message!
     Object: <__main__.MinionAdapter object at 0x...>, Args: (), Kwargs: {'key': 'name', 'value': 'Elrond'}
+    Elves name changed!
     """
 
 if __name__ == '__main__':
     import doctest
-    doctest.testmod(optionflags=doctest.ELLIPSIS)
+    doctest.testmod()

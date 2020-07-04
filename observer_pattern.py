@@ -1,8 +1,8 @@
-class Observer:
+class Observer(object):
     def update(self, obj, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplemented
 
-class Observable:
+class Observable(object):
     def __init__(self):
         self._observers = []
 
@@ -12,6 +12,6 @@ class Observable:
     def remove_observer(self, observer):
         self._observers.remove(observer)
 
-    def notify_observer(self, *args, **kwargs):
+    def notify_observers(self, *args, **kwargs):
         for observer in self._observers:
             observer.update(self, *args, **kwargs)
